@@ -38,6 +38,7 @@ class Home extends Component {
       lastPress: null, // key of the last pressed component
       isPressed: false,
       order: range(count), // index: visual position. value: component key/id
+      openStatus: false
     };
   };
 
@@ -81,15 +82,24 @@ class Home extends Component {
   handleMouseUp = () => {
     this.setState({isPressed: false, mouseCircleDelta: [0, 0]});
   };
+  handleOpenBox = (openStatus) => {
+    console.log('handleOpenBox',this);
+    if(this.state.openStatus){
+      app.alert("已开，需要等10分钟后开启");
+    }else{
+      this.setState({openStatus: true});
+    }
+  };
 
   render() {
-    const {order, lastPress, isPressed, mouseXY} = this.state;
+    const {order, lastPress, isPressed, mouseXY ,openStatus} = this.state;
     return (
       <div className="demo2">
         {order.map((_, key) => {
           let style;
           let x;
           let y;
+          let boxStatus;
           const visualPosition = order.indexOf(key);
           if (key === lastPress && isPressed) {
             [x, y] = mouseXY;
@@ -108,13 +118,18 @@ class Home extends Component {
               boxShadow: spring((x - (3 * width - 50) / 2) / 15, springSetting1),
             };
           }
+          if (openStatus){
+            boxStatus = 'demo2-ball demo2-ball-open';
+          }else{
+            boxStatus = 'demo2-ball';
+          }
           return (
             <Motion key={key} style={style}>
-              {({translateX, translateY, scale, boxShadow}) =>
+              {({translateX, translateY, scale}) =>
                 <div
                   onMouseDown={this.handleMouseDown.bind(null, key, [x, y])}
                   onTouchStart={this.handleTouchStart.bind(null, key, [x, y])}
-                  className="demo2-ball"
+                  className={boxStatus}
                   style={{
                     WebkitTransform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
                     transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
@@ -125,6 +140,8 @@ class Home extends Component {
             </Motion>
           );
         })}
+        <div className="btnbox"><a href="#" className="btn" onClick={this.handleOpenBox.bind()}>开箱子</a></div>
+        
       </div>
     );
   };
