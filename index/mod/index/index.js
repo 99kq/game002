@@ -85,7 +85,7 @@ class Home extends Component {
   handleOpenBox = (openStatus) => {
     console.log('handleOpenBox',this);
     if(this.state.openStatus){
-      app.alert("已开，需要等10分钟后开启");
+      app.alert("已开，需要等10分钟后开启！！"); 
     }else{
       this.setState({openStatus: true});
     }
