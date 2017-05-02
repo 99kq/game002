@@ -6,21 +6,8 @@
     user-select: none;
   }
 
-  .demo2-outer {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: #EEE;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    display: -webkit-flex;
-    -webkit-justify-content: center;
-    -webkit-align-items: center;
-    padding: 50px;
-  }
 
-  .demo2 {
+  .chestbox {
     width: 260px;
     height:100%;
     left:50%;
@@ -29,17 +16,16 @@
     position: absolute;
   }
 
-  .demo2-ball {
+  .chest {
     position: absolute;
     width: 259px;
     height: 194px;
     display: inline-block;
     background-size: 259px 194px;
     background: data-uri('/res/images/chest.png') no-repeat;
-
-    
+  
   }
-  .demo2-ball-open{
+  .chest-open{
     width: 260px;
     height: 260px;
     display: inline-block;
@@ -60,6 +46,8 @@
       border-radius: 5px;
       color: #fff;
       margin: 10px;
+      height: 30px;
+      line-height: 30px;
       text-align: center;
     }
   }
