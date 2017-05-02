@@ -7,18 +7,10 @@ import range from 'lodash.range';
 
 const springSetting1 = {stiffness: 180, damping: 10};
 const springSetting2 = {stiffness: 120, damping: 17};
-function reinsert(arr, from, to) {
-  const _arr = arr.slice(0);
-  const val = _arr[from];
-  _arr.splice(from, 1);
-  _arr.splice(to, 0, val);
-  return _arr;
-}
 
 function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min);
 }
-
 
 const [count, width, height] = [1, 150, 150];
 // indexed by visual position
@@ -52,7 +44,6 @@ class Home extends Component {
   handleTouchStart = (key, pressLocation, e) => {
     this.handleMouseDown(key, pressLocation, e.touches[0]);
   };
-
   handleTouchMove = (e) => {
     e.preventDefault();
     this.handleMouseMove(e.touches[0]);
@@ -65,8 +56,8 @@ class Home extends Component {
       const col = clamp(Math.floor(mouseXY[0] / width), 0, 2);
       const row = clamp(Math.floor(mouseXY[1] / height), 0, Math.floor(count / 3));
       const index = row * 3 + col;
-      const newOrder = reinsert(order, order.indexOf(lastPress), index);
-      this.setState({mouseXY, order: newOrder});
+
+      this.setState({mouseXY});
     }
   };
 
@@ -79,13 +70,17 @@ class Home extends Component {
     });
   };
 
+  // 晃动动画
+  handleRockBox =() =>{
+    console.log('handleRockBox',this);
+    this.setState({isPressed: false, mouseCircleDelta: [0, 0]});
+  }
   handleMouseUp = () => {
     this.setState({isPressed: false, mouseCircleDelta: [0, 0]});
   };
   handleOpenBox = (openStatus) => {
-    console.log('handleOpenBox',this);
     if(this.state.openStatus){
-      app.alert("已开，需要等10分钟后开启！！"); 
+      console.log("已开，需要等10分钟后开启！！"); 
     }else{
       this.setState({openStatus: true});
     }
@@ -101,11 +96,12 @@ class Home extends Component {
           let y;
           let boxStatus;
           const visualPosition = order.indexOf(key);
+          console.log('key:',order.indexOf(key),key);
           if (key === lastPress && isPressed) {
             [x, y] = mouseXY;
             style = {
-              translateX: x,
-              translateY: y,
+              translateX: spring(x, springSetting1),
+              translateY: spring(y, springSetting1),
               scale: spring(1.2, springSetting1),
               boxShadow: spring((x - (3 * width - 50) / 2) / 15, springSetting1),
             };
@@ -140,8 +136,10 @@ class Home extends Component {
             </Motion>
           );
         })}
-        <div className="btnbox"><a href="#" className="btn" onClick={this.handleOpenBox.bind()}>开箱子</a></div>
-        
+        <div className="btnbox">
+          <a href="#" className="btn" onClick={this.handleOpenBox.bind()}>开箱子</a>
+          <a href="#" className="btn" onClick={this.handleRockBox.bind()}>晃箱子</a>
+        </div>
       </div>
     );
   };
