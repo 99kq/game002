@@ -13,11 +13,10 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openStatus: false, //当前箱子开启状态
-      roke: false,
-      leftTime: 60,
+      openStatus: false, //当前箱子开启状态:false为还能开，true为箱子已打开
+      roke: false, //晃动箱子的开关
       activityInfoId:'', //活动id
-      countdown:19999,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
+      countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
       status:"00",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:3, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
@@ -26,17 +25,11 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    // 获取活动信息
     this.requestEventStatus();
+    // 开启倒计时
     this.timer = setInterval(function () {
-        let count = this.state.leftTime;
         let countdown = this.state.countdown;
-        count -= 1;
-        if (count < 1) {
-          count = 60;
-        }
-        this.setState({
-          leftTime: count
-        });
         //倒计时计算箱子是否可以开启
         if ( countdown > 0 ){
           this.setState({
@@ -49,8 +42,8 @@ class Home extends Component {
         }
         //每间隔5秒箱子晃动一次
         let y = 5 ; 
-        let z = parseInt(count / y);
-        if ( y*z == count){
+        let z = parseInt(countdown / y);
+        if ( y*z == countdown){
           this.handleRockBox();
         }
     }.bind(this), 1000);
@@ -79,7 +72,13 @@ class Home extends Component {
   }
   // 
   requestEventReward = () => {
-
+    let boxNmuber = this.state.todayAll;
+    app.alert("您已获得神秘礼品！");
+    this.setState({
+      'openStatus': true,
+      'todayAll': boxNmuber - 1,
+      'countdown': this.state.timeInterval
+    });
   }
   //打开盒子
   handleOpenBox = () => {
@@ -98,11 +97,7 @@ class Home extends Component {
     }else{
       // 有可开箱子
       if( boxNmuber> 0){
-        this.setState({
-          'openStatus': true,
-          'todayAll': boxNmuber - 1,
-          'countdown': this.state.timeInterval
-        });
+        this.requestEventReward();
       }else{
         app.alert("已开达到今天上限，明天再来！！"); 
       }
