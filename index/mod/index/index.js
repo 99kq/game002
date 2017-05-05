@@ -17,7 +17,7 @@ class Home extends Component {
       roke: false, //晃动箱子的开关
       activityInfoId:'', //活动id
       countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
-      status:"00",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
+      status:"99",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:3, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
       timeInterval:10, // 抽取宝箱的间隔时间
@@ -54,7 +54,6 @@ class Home extends Component {
         let y = 5 ; 
         let z = parseInt(count / y);
         if ( y*z == count){
-          console.log(count)
           this.handleRockBox();
         }
     }.bind(this), 1000);
@@ -143,7 +142,7 @@ class Home extends Component {
         if (days < 1){ days = ""}
         return (
             <div className="left-text">
-                <span>剩余时间</span> {minutes}<span>分</span> {seconds}<span>秒</span>
+                <span></span> {hours}<span>小时</span>{minutes}<span>分</span> {seconds}<span>秒</span>
             </div>
         )
       }
@@ -154,12 +153,29 @@ class Home extends Component {
       console.log('footer',that);
       that.setLeftTime(that.state.countdown);
     }
+    // 活动未开启状态
+    function eventStatus(){
+      let status = this.state.status;
+      switch (status){
+        case "99":
+          return(
+            <div className="status">
+              活动还没开始，明天来看看
+            </div>
+          );
+        case "98":
+          return(
+            <div className="status">
+              活动已结束，请下次再来
+            </div>
+          );
+      }
+    }
+
     return (
       <div className="lottery">
         <div className="headbox">
-          <div className="status">
-            {this.state.status}
-          </div>
+          {eventStatus.bind(this)()}
           <div className="info">
             每天瓜分1000万
             100件3C爆款免息购
