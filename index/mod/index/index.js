@@ -20,7 +20,8 @@ class Home extends Component {
       status:"00",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:3, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
-      timeInterval:10 // 抽取宝箱的间隔时间
+      timeInterval:10, // 抽取宝箱的间隔时间
+      leftTime:60
     };
   }
 
@@ -30,6 +31,15 @@ class Home extends Component {
     // 开启倒计时
     this.timer = setInterval(function () {
         let countdown = this.state.countdown;
+        let count = this.state.leftTime;
+        count -= 1;
+        if (count < 1) {
+          count = 60;
+        }
+        this.setState({
+          leftTime: count
+        });
+
         //倒计时计算箱子是否可以开启
         if ( countdown > 0 ){
           this.setState({
@@ -42,8 +52,9 @@ class Home extends Component {
         }
         //每间隔5秒箱子晃动一次
         let y = 5 ; 
-        let z = parseInt(countdown / y);
-        if ( y*z == countdown){
+        let z = parseInt(count / y);
+        if ( y*z == count){
+          console.log(count)
           this.handleRockBox();
         }
     }.bind(this), 1000);
@@ -117,25 +128,31 @@ class Home extends Component {
     }
     // 剩余时间倒计时
     function setLeftTime(seconds_in){
-        if (isNaN(seconds_in)) {
-            return '00:00:00'
-          } else {
-            let sec_num = parseInt(seconds_in, 10)
-            let hours   = Math.floor(sec_num / 3600)
-            let displayHours = Math.floor(sec_num / 3600)%24
-            let days    = Math.floor(hours / 24)
-            let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
-            let seconds = sec_num - (hours * 3600) - (minutes * 60)
-            if (hours   < 10) {hours   = "0" + hours}
-            if (minutes < 10) {minutes = "0" + minutes}
-            if (seconds < 10) {seconds = "0" + seconds}
-            if (days < 1){ days = ""}
-            return (
-                <div className="left-text">
-                   <span>剩余时间</span>  {days }<span>天</span> {displayHours}<span>时</span> {minutes}<span>分</span> {seconds}<span>秒</span>
-                </div>
-            )
-          }
+      if (isNaN(seconds_in)) {
+        return '00:00:00'
+      } else {
+        let sec_num = parseInt(seconds_in, 10)
+        let hours   = Math.floor(sec_num / 3600)
+        let displayHours = Math.floor(sec_num / 3600)%24
+        let days    = Math.floor(hours / 24)
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
+        let seconds = sec_num - (hours * 3600) - (minutes * 60)
+        if (hours   < 10) {hours   = "0" + hours}
+        if (minutes < 10) {minutes = "0" + minutes}
+        if (seconds < 10) {seconds = "0" + seconds}
+        if (days < 1){ days = ""}
+        return (
+            <div className="left-text">
+                <span>剩余时间</span> {minutes}<span>分</span> {seconds}<span>秒</span>
+            </div>
+        )
+      }
+    }
+    // 页脚
+    function footer(){
+      let that = this;
+      console.log('footer',that);
+      that.setLeftTime(that.state.countdown);
     }
     return (
       <div className="lottery">
@@ -146,7 +163,7 @@ class Home extends Component {
           <div className="info">
             每天瓜分1000万
             100件3C爆款免息购
-            今天你有3次机会
+            今天你有{this.state.todayAll}次机会
           </div>
         </div>
         <div className="chestbox">
