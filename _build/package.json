@@ -1,0 +1,30 @@
+{
+  "name": "ux-web",
+  "version": "1.0.0",
+  "description": "build with cue-cli",
+  "main": "default.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "c server start --nolog",
+    "start": "c release -Lc",
+    "build": "c release prod2 -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jian263994241/default.git"
+  },
+  "keywords": [
+    "ux",
+    "cue-cli"
+  ],
+  "author": "uxweb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jian263994241/default/issues"
+  },
+  "homepage": "https://github.com/jian263994241/default#readme",
+  "dependencies": {
+    "lodash.range": "^3.2.0",
+    "react-motion": "^0.5.0"
+  }
+}
