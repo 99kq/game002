@@ -19,10 +19,11 @@ class Home extends Component {
       activityInfoId:'', //活动id
       countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
       status:"00",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
-      todayAll:3, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
+      todayAll:1, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
       timeInterval:10, // 抽取宝箱的间隔时间
-      leftTime:60
+      leftTime:60,
+      statusText : "活动还没开始，明天来看看"
     };
   }
 
@@ -139,7 +140,12 @@ class Home extends Component {
         }
       }else{
         // 无可开箱子
-        app.alert("已开达到今天上限，明天再来！！"); 
+        if(this.state.statusText){
+          app.alert(this.state.statusText); 
+        }else{
+          app.alert("已开达到今天上限，明天再来！！"); 
+        }
+        
       }
    
     // });
@@ -190,8 +196,8 @@ class Home extends Component {
       if(that.state.status !='98' && that.state.status !='99'){
         return(
           <div className="footer">
-            <div className="txt">距下次宝箱开启时间：</div>
-            <div className="time">{setLeftTime.bind(this,this.state.countdown)()}</div>
+            <span className="txt">距下次宝箱开启时间：</span>
+            <span className="time">{setLeftTime.bind(this,this.state.countdown)()}</span>
           </div>
         )
       }
@@ -201,24 +207,30 @@ class Home extends Component {
       let status = this.state.status;
       switch (status){
         case "99":
+          this.setState({
+            statusText : "活动还没开始，明天来看看"
+          });
           return(
             <div className="status">
-              活动还没开始，明天来看看
+              {this.state.statusText}
             </div>
           );
         case "98":
+          this.setState({
+            statusText : "活动已结束，请下次再来"
+          });
           return(
             <div className="status">
-              活动已结束，请下次再来
+              {this.state.statusText}
             </div>
           );
       }
     }
     return (
       <div className="lottery">
+        <div className="ad"></div>
+        {eventStatus.bind(this)()}
         <div className="headbox">
-          
-          {eventStatus.bind(this)()}
           <div className="title">
             每天瓜分1000万
             100件3C爆款免息购
@@ -227,7 +239,7 @@ class Home extends Component {
         <div className="chestbox">
           <div className={boxClaseName} onClick={this.handleRockBox.bind()} />
         </div>
-        <div className="rule">活动细则</div>
+        <div className="rule" onClick={this.handleOpenBox.bind()}>活动细则</div>
         <div className="btnbox">
           <Motion style={{scale: spring(this.state.roke ? 1.1 : 1, springSetting1)}}>
             {({scale}) =>
@@ -238,7 +250,7 @@ class Home extends Component {
             }
           </Motion>
         </div>
-        <div className="number">今天你有{this.state.todayAll}次机会</div>
+        <div className="number">今天您还有 {this.state.todayAll} 次开箱机会</div>
         {footer.bind(this)()}
         
       </div>

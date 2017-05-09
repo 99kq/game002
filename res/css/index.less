@@ -1,5 +1,3 @@
-
-
 * {
     padding: 0;
     margin: 0;
@@ -9,74 +7,123 @@
   }
 
   .page{
-    background: data-uri('/res/images/bg-body.jpg') no-repeat top center;
+    background: data-uri('/res/images/bg-body.jpg') no-repeat center center;
     background-size: cover;
   }
-  .headbox{
-    width:100%;
-    height:20%;
-    top: 12%;
-    position: absolute;
-    .title {
+  .lottery{
+    .ad{
       position: absolute;
-      width: 75%;
-      height: 63%;
-      display: inline-block;
-      background-size: contain;
-      background: data-uri('/res/images/title.png') no-repeat;
-      left:12%;
-      text-indent: -999em;
+      top:1%;
+      right:0;
+      width:31px;
+      height: 18px;
+      background: data-uri('/res/images/icon-ad.png') no-repeat center center;
+      background-size: cover;
     }
-  }
-  
-  .chestbox {
-    width: 100%;
-    height:33%;
-    top: 30%;
-    position: absolute;
+    .status{
+      width: 100%;
+      height: 40px;
+      top: 0;
+      position: absolute;
+      background: rgba(0,0,0,0.5);
+      color: #FFFFFF;
+      line-height: 40px;
+      text-align: center;
+    }
+    .headbox{
+      width:100%;
+      height:20%;
+      top: 12%;
+      position: absolute;
+      .title {
+        position: absolute;
+        width: 75%;
+        height: 63%;
+        display: inline-block;
+        background-size: contain;
+        background: data-uri('/res/images/title.png') top center no-repeat;
+        left:12%;
+        text-indent: -999em;
+      }
+    }
+    
+    .chestbox {
+      width: 100%;
+      height:33%;
+      top: 30%;
+      position: absolute;
+      .chest {
+        position: absolute;
+        width: 50%;
+        height: 88%;
+
+        display: inline-block;
+        background-size: contain;
+        background: data-uri('/res/images/chest-close.png') top center no-repeat;
+        left:25%;
+      }
+      .chest-open{
+        width: 59%;
+        height: 88%;
+        display: inline-block;
+        background-size: contain;
+        background: data-uri('/res/images/chest-open.png') top center no-repeat;
+        left:25%;
+        top:-4%;
+      }
+    }
+
+    
+    .btnbox{
+      width: 100%;
+      height:10%;
+      top: 66%;
+      position: absolute;
+      .btn{
+        display: block;
+        left:25%;
+        position: absolute;
+        width:50%;
+        height:76%;
+        background-size: contain;
+        background: data-uri('/res/images/btn.png') top center no-repeat;
+      }
+      .btn-open{
+        display:none;
+      }
+    }
+    .number{
+      position: absolute;
+      top:77%;
+      width:100%;
+      text-align: center;
+      font-size: 16px;
+      color: #fff06f;
+      height: 46px;
+      line-height: 46px;
+      background: data-uri('/res/images/bg-number.png') no-repeat center center;
+      background-size: cover;
+    }
+    .footer{
+      width: 94%;
+      height: 40px;
+      bottom: 0;
+      position: absolute;
+      background: rgba(75,3,16,0.85);
+      color: #FFFFFF;
+      line-height: 40px;
+      background-image: data-uri('/res/images/icon-clock.png');
+      background-size:28px 32px;
+      background-position: 8px;
+      background-repeat: no-repeat;
+      padding-left:12%;
+      .left-text{
+        position: absolute;
+        right: 8%;
+        bottom:0;
+        text-align:right;
+      }
+    }
   }
 
-  .chest {
-    position: absolute;
-    width: 50%;
-    height: 88%;
-
-    display: inline-block;
-    background-size: contain;
-    background: data-uri('/res/images/chest-close.png') no-repeat;
-    left:25%;
-  }
-  .chest-open{
-    width: 59%;
-    height: 88%;
-    display: inline-block;
-    background-size: contain;
-    background: data-uri('/res/images/chest-open.png') no-repeat;
-    left:25%;
-    top:-4%;
-  }
-  .btnbox{
-    width: 100%;
-    height:10%;
-    top: 66%;
-    position: absolute;
-    .btn{
-      display: block;
-      left:25%;
-      position: absolute;
-      width:50%;
-      height:76%;
-      background-size: contain;
-      background: data-uri('/res/images/btn.png') no-repeat;
-    }
-    .btn-open{
-      display:none;
-    }
-  }
-  .footer{
-    width: 100%;
-    height: 40px;
-    bottom: 0;
-    position: absolute;
-  }
   
