@@ -69,10 +69,11 @@ module.exports = {
   rewardRequest: function(opt){
     opt = {
       url: {
+          // mock: 'rewardRequest.json',
           real: api.rewardRequest
       },
       headers: {
-          authorization: sessionStorage.loginToken
+          Authorization: sessionStorage.loginToken
       },
       method: 'POST',
       data: opt.data,
@@ -90,7 +91,7 @@ module.exports = {
           real: api.activityRemainInfo
       },
       headers: {
-          authorization: sessionStorage.loginToken
+          Authorization: sessionStorage.loginToken
       },
       method: 'POST',
       data: opt.data,

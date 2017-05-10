@@ -16,20 +16,19 @@ class Home extends Component {
     this.state = {
       openStatus: false, //当前箱子开启状态:false为还能开，true为箱子已打开
       roke: false, //晃动箱子的开关
-      activityInfoId:'', //活动id
+      activityInfoId:'4', //活动id
       countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
-      status:"03",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
-      todayAll:1, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
+      status:"99",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
+      todayAll:0, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
       timeInterval:10, // 抽取宝箱的间隔时间
-      leftTime:60,
-      statusText : "活动还没开始，明天来看看"
+      leftTime:60
     };
   }
 
   componentDidMount() {
     // 获取活动信息
-    // this.requestEventStatus();
+    this.requestEventStatus();
     // 开启倒计时
     this.timer = setInterval(function () {
         let countdown = this.state.countdown;
@@ -60,6 +59,53 @@ class Home extends Component {
         }
     }.bind(this), 1000);
   }
+  // 弹出领取成功浮层
+  popSusses = (info) =>{
+    let that = this;
+    tongji.track(6);
+    app.closeModal();
+    let popupHTML = '<div class="popup nb-modle popup-success">' +
+                      '<div class="content-block">' +
+                          '<a href="#" class="button button-big active btn-success">查看详情</a>' +
+                      '</div>' +
+                      '<div class="index-popup-btn">' +
+                          '<a href="#" class="close-popup index-popup-close">X</a>' +
+                      '</div>'
+                  '</div>';
+    // tongji.track(12);
+    app.popup(popupHTML);
+    // 绑定弹出注册层事件
+    $$('.popup-success').on('opened', function () {
+      tongji.track(7);
+      $$(document).on('click', '.btn-success', function() {
+          
+          app.closeModal();
+      });
+    });
+  }
+  // 弹出领取 没有中奖
+  popNotSusses = (info) =>{
+    let that = this;
+    tongji.track(6);
+    app.closeModal();
+    let popupHTML = '<div class="popup nb-modle popup-notsuccess">' +
+                      '<div class="content-block">' +
+                          '<a href="#" class="button button-big active btn-success">查看详情</a>' +
+                      '</div>' +
+                      '<div class="index-popup-btn">' +
+                          '<a href="#" class="close-popup index-popup-close">X</a>' +
+                      '</div>'
+                  '</div>';
+    app.popup(popupHTML);
+    // 绑定弹出注册层事件
+    $$('.popup-notsuccess').on('opened', function () {
+      tongji.track(7);
+      $$(document).on('click', '.btn-notsuccess', function() {
+          
+          app.closeModal();
+      });
+    });
+  }
   //获取活动信息
   requestEventStatus = () => {
     let that = this;
@@ -70,7 +116,7 @@ class Home extends Component {
         if(infoRes.responseCode === '00'){
           // 保存活动信息
           that.setState({
-            'activityId':infoRes.activityId,
+            'activityInfoId':infoRes.activityInfoId,
             'countdown':infoRes.countdown,
             'status':infoRes.status,
             'todayAll':infoRes.todayAll,
@@ -88,53 +134,34 @@ class Home extends Component {
         this.setState({
           statusText : "活动还没开始，明天来看看"
         });
-        return(
-          <div className="status">
-            {this.state.statusText}
-          </div>
-        );
       case "98":
         this.setState({
           statusText : "活动已结束，请下次再来"
         });
-        return(
-          <div className="status">
-            {this.state.statusText}
-          </div>
-        );
     }
   }
-  // 
+  // 获取箱子权益
   requestEventReward = () => {
     let boxNmuber = this.state.todayAll;
     let that = this;
     // test
-    app.alert("您已获得神秘礼品！");
-    // test
-
-    this.setState({
+    app.alert("您已获得test资格！");
+    
+    that.setState({
       'openStatus': true,
       'todayAll': boxNmuber - 1,
-      'countdown': this.state.timeInterval
+      'countdown': that.state.timeInterval
     });
-    let infoData = {
-      "activityInfoId":sessionStorage.activityInfoId
+    // test
+    let rewardData = {
+      "activityInfoId":that.state.activityInfoId
     };
-    service.requestEventReward({
-      data: infoData,
-      success: function(infoRes) {
-        if(infoRes.responseCode === '00'){
-          // 保存活动信息
-          that.setState({
-            'activityId':infoRes.activityId,
-            'countdown':infoRes.countdown,
-            'status':infoRes.status,
-            'todayAll':infoRes.todayAll,
-            'todayOpened':infoRes.todayOpened,
-          })
-        }else{
-          app.alert('获取活动信息:'+infoRes.responseMessagev);
-        }
+    console.log('rewardRequest',rewardData,sessionStorage);
+    service.rewardRequest({
+      data: rewardData,
+      success: function(rewardRes) {
+        //
+        console.log('rewardRequest',rewardRes);
       }
     });
   }
@@ -142,14 +169,15 @@ class Home extends Component {
   handleOpenBox = () => {
     let that = this;
     console.log('handleOpenBox',this.state,that);
+    
     let boxNmuber = this.state.todayAll;
     if(that.state.status ==='98' || that.state.status ==='99'){
       app.alert(this.state.statusText);
       return false;
     }
     // 用户登录判断
-    // H5login(function() {
-      console.log('logined');
+    H5login(function() {
+      // console.log('logined');
       if( boxNmuber > 0){
         //有可开箱子
         if(this.state.countdown>0){
@@ -163,15 +191,15 @@ class Home extends Component {
           app.alert("需要等"+ minutes +"分"+seconds+"秒后开启！！"); 
           return false;
         }else{
+          // console.log(that,that.requestEventReward);
           that.requestEventReward();
         }
       }else{
         // 无可开箱子
         app.alert("已开达到今天上限，明天再来！！"); 
       }
-    // }); //login
+    }); //login
   }
-
   // 晃动动画
   handleRockBox = () => {
     console.log('handleRockBox');
@@ -179,8 +207,12 @@ class Home extends Component {
   }
   // 规则
   handleRule = () => {
+    let that = this;
     console.log('handleRule');
-    app.alert('规则');
+    // app.alert('规则');
+    //test
+    that.popSusses();
+    //test
     
   }
   render() {
@@ -261,13 +293,24 @@ class Home extends Component {
         )
       // }
     }
+    //页顶部状态
+    function tipStatus(){
+      let that = this;
+      if(that.state.status ==='98' || that.state.status ==='99'){
+        return (
+          <div className="status">
+            {that.state.statusText}
+          </div>
+        )
+      }else{
+        return false;
+      }
+    }
 
     return (
       <div className="lottery">
         <div className="ad"></div>
-        <div className="status">
-          {this.state.statusText}
-        </div>
+        {tipStatus.bind(this)()}
         <div className="headbox">
           <div className="title">
             每天瓜分1000万
