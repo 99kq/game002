@@ -18,7 +18,7 @@ class Home extends Component {
       roke: false, //晃动箱子的开关
       activityInfoId:'', //活动id
       countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
-      status:"00",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
+      status:"03",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:1, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
       timeInterval:10, // 抽取宝箱的间隔时间
@@ -81,6 +81,28 @@ class Home extends Component {
         }
       }
     });
+    //活动状态
+    let status = this.state.status;
+    switch (status){
+      case "99":
+        this.setState({
+          statusText : "活动还没开始，明天来看看"
+        });
+        return(
+          <div className="status">
+            {this.state.statusText}
+          </div>
+        );
+      case "98":
+        this.setState({
+          statusText : "活动已结束，请下次再来"
+        });
+        return(
+          <div className="status">
+            {this.state.statusText}
+          </div>
+        );
+    }
   }
   // 
   requestEventReward = () => {
@@ -118,8 +140,13 @@ class Home extends Component {
   }
   //打开盒子
   handleOpenBox = () => {
-    console.log('handleOpenBox',this.state);
+    let that = this;
+    console.log('handleOpenBox',this.state,that);
     let boxNmuber = this.state.todayAll;
+    if(that.state.status ==='98' || that.state.status ==='99'){
+      app.alert(this.state.statusText);
+      return false;
+    }
     // 用户登录判断
     // H5login(function() {
       console.log('logined');
@@ -136,19 +163,13 @@ class Home extends Component {
           app.alert("需要等"+ minutes +"分"+seconds+"秒后开启！！"); 
           return false;
         }else{
-          this.requestEventReward();
+          that.requestEventReward();
         }
       }else{
         // 无可开箱子
-        if(this.state.statusText){
-          app.alert(this.state.statusText); 
-        }else{
-          app.alert("已开达到今天上限，明天再来！！"); 
-        }
-        
+        app.alert("已开达到今天上限，明天再来！！"); 
       }
-   
-    // });
+    // }); //login
   }
 
   // 晃动动画
@@ -210,9 +231,11 @@ class Home extends Component {
     // 页脚
     function footer(){
       let that = this;
-      // console.log('footer',that);
-      setLeftTime(that.state.countdown);
-      if(that.state.status !='98' && that.state.status !='99'){
+      // console.log('footer',that.state.status,(that.state.status !='98' && that.state.status !='99'));
+      // setLeftTime(that.state.countdown);
+      if(that.state.status ==='98' || that.state.status ==='99'){
+        return false;
+      }else{
         return(
           <div className="footer">
             <span className="txt">距下次宝箱开启时间：</span>
@@ -221,34 +244,30 @@ class Home extends Component {
         )
       }
     }
-    // 活动未开启状态
-    function eventStatus(){
-      let status = this.state.status;
-      switch (status){
-        case "99":
-          this.setState({
-            statusText : "活动还没开始，明天来看看"
-          });
-          return(
-            <div className="status">
-              {this.state.statusText}
-            </div>
-          );
-        case "98":
-          this.setState({
-            statusText : "活动已结束，请下次再来"
-          });
-          return(
-            <div className="status">
-              {this.state.statusText}
-            </div>
-          );
-      }
+
+    // 开箱按钮
+    function btnBox(){
+      let that = this;
+      // console.log('footer',that.state.status,(that.state.status !='98' && that.state.status !='99'));
+      // setLeftTime(that.state.countdown);
+      // if(that.state.status ==='98' || that.state.status ==='99'){
+      //   return false;
+      // }else{
+        // console.log('in');
+        return(
+          <div className="btnbox">
+            {btnShake.bind(this)()}
+          </div>
+        )
+      // }
     }
+
     return (
       <div className="lottery">
         <div className="ad"></div>
-        {eventStatus.bind(this)()}
+        <div className="status">
+          {this.state.statusText}
+        </div>
         <div className="headbox">
           <div className="title">
             每天瓜分1000万
@@ -261,12 +280,9 @@ class Home extends Component {
         <div className="rule">
           <a href="#" className="btn-rule" onClick={this.handleRule.bind()}>活动细则</a>
         </div>
-        <div className="btnbox">
-          {btnShake.bind(this)()}
-        </div>
+        {btnBox.bind(this)()}
         <div className="number">今天您还有 {this.state.todayAll} 次开箱机会</div>
         {footer.bind(this)()}
-        
       </div>
     );
   }
