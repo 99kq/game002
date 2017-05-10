@@ -65,14 +65,18 @@ class Home extends Component {
     let that = this;
     tongji.track(3);
     app.closeModal();
+    let noKQB = '<a href="#" class="button button-big active btn-success">下载快钱钱包App有更多机会</a>';
+    if(window.KQB.Env.KQ){
+      noKQB = '';
+    }
     let popupHTML = '<div class="popup nb-modle popup-success">' +
                       '<div class="qy-status">' +
-                        '<div class="qy-number"><span class="amt">'+info.interestsAmt+'</span>元</div>' +
-                        '<div class="qy-type">抵用券</div>' +
+                        '<div class="qy-left"><div class="qy-number"><span class="amt">'+info.interestsAmt+'</span>元</div>' +
+                        '<div class="qy-type">抵用券</div></div>' +
                         '<div class="qy-text"><span class="name">'+info.interestsName+'</span>元</div>' +
                       '</div>' +
-                      '<div class="content-block">' +
-                          '<a href="#" class="button button-big active btn-success">下载快钱钱包App有更多机会</a>' +
+                      '<div class="content-block"><p class="info">优惠券已发放至<br/>您的<b>快钱钱包App卡券包中</b></p>' +
+                          noKQB +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +

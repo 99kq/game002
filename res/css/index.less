@@ -172,7 +172,7 @@
     .index-popup-btn {
       position: absolute;
       left: 50%;
-      bottom: -30%;
+      bottom: -20%;
       width: 40px;
       margin-left:-20px;
       height: 40px; 
@@ -218,21 +218,68 @@
   background-size: contain;
   background-position: center top;
   height:auto;
+  padding-bottom: 0;
   .content-block {
-    margin-top: 190px;
-    margin-bottom: 10px;
+    margin-top: 58%;
+    margin-bottom: 7%;
   }
   .qy-status{
     height: auto;
     padding: 20% 10%;
     color: #e63e3d;
     position: relative;
-    font-size:16px;
+    font-size:13px;
     .qy-text{
       position: absolute;
       width: 42%;
-      top: 50%;
+      top: 80%;
       right: 10%;
+      margin-top: -10%;
+      height: 60%;
+      display: box;
+      box-orient: horizontal;
+      box-pack: center;
+      box-align: center;
+      display: -webkit-box;
+      -webkit-box-orient: horizontal;
+      -webkit-box-pack: center;
+      -webkit-box-align: center;
+      line-height: 17px;
     }
+    .qy-left{
+      position: absolute;
+      width: 32%;
+      top: 80%;
+      left: 7%;
+      margin-top: -10%;
+      height: 60%;
+      display: box;
+      box-orient: horizontal;
+      box-pack: center;
+      box-align: center;
+      display: -webkit-box;
+      -webkit-box-orient: horizontal;
+      -webkit-box-pack: center;
+      -webkit-box-align: center;
+      .qy-type{
+        position: absolute;
+        bottom: -4%;
+        width: 100%;
+        left:5%;
+        letter-spacing:4px;
+        text-align: center;
+      }
+      .amt{
+        font-size: 19px;
+      }
+    }
+    
+  }
+  .info {
+    text-align: center;
+  }
+  .button {
+    font-size:13px;
+    width:100%;
   }
 }
