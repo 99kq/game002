@@ -86,10 +86,10 @@ class Home extends Component {
     app.popup(popupHTML);
     // 绑定弹出注册层事件
     $$('.popup-success').on('opened', function () {
-      // tongji.track(7);
+      tongji.track(4);
       $$(document).on('click', '.btn-success', function() {
-          
-          app.closeModal();
+        window.open("https://at.umeng.com/bSXPby");
+        app.closeModal();
       });
     });
   }
