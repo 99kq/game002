@@ -102,9 +102,7 @@
         background-size: contain;
         background: data-uri('/res/images/btn.png') top center no-repeat;
       }
-      .btn-open{
-        display:none;
-      }
+      
     }
     .number{
       position: absolute;
@@ -148,17 +146,17 @@
             height: auto;
         }
     }
-    width: 80%;
+    width: 70%;
     height: auto;
     // background-image: data-uri('/res/images/popup.png');
     background-size: 100% auto;
     background-repeat: no-repeat;
     top: 20%;
-    left: 10%;
+    left: 15%;
     overflow: visible;
     background: #ffffff;
     border-radius: 18px;
-
+    padding-bottom: 20px;
     .modal-inner {
         background-color: transparent;
         height: 370px;
@@ -189,24 +187,19 @@
       }
     }
     .button {
-      border-color: #969696;
-      background-color: #969696;
+      border-color: #e63e3d;
+      background-color: #e63e3d;
+      width:90%;
+      margin: 0 auto;
+      border-radius: 20px;
+      font-size: 16px;
     }
     .button.active{
-      border-color: rgba(172,133,65,1);
-      background-color:rgba(172,133,65,1);
+      border-color: #e63e3d;
+      background-color:#e63e3d;
     }
 }
-.popup-success{
-  background: #ffffff data-uri('/res/images/pop-success.png') no-repeat ;
-  background-size:264px 155px;
-  background-position: center  20px;
-  height:auto;
-  .content-block {
-    margin-top: 190px;
-    margin-bottom: 10px;
-  }
-}
+
 .ico-close {
     width: 30px;
     height: 30px;
@@ -219,4 +212,27 @@
       bottom: -24%;
       left: 50%;
       margin-left: -15px;
+}
+.popup-success{
+  background: #ffffff data-uri('/res/images/pop-success.png') no-repeat ;
+  background-size: contain;
+  background-position: center top;
+  height:auto;
+  .content-block {
+    margin-top: 190px;
+    margin-bottom: 10px;
+  }
+  .qy-status{
+    height: auto;
+    padding: 20% 10%;
+    color: #e63e3d;
+    position: relative;
+    font-size:16px;
+    .qy-text{
+      position: absolute;
+      width: 42%;
+      top: 50%;
+      right: 10%;
+    }
+  }
 }

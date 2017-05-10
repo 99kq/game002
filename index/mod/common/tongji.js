@@ -13,30 +13,22 @@ trackEvent.prototype.track = function(key) {
   }
 };
 
-var type = 'changke';
+var type = 'VASbaoxiang';
+var environment = "";
 
-
-// 1 changke_huodongym
-// 2 changke_lingqu
-// 3 changke_zhucetc
-// 4 changke_yanzhengma
-// 5 changke_lijilingqu
-// 6 changke_chenggong
-// 7 changke_chakanxiangqing
-// 8 changke_xiangqingym
-// 9 changke_lijishiyong
+if (window.KQB.Env.KQ){
+  environment = "_neibu";
+}else{
+  environment = "_waibu";
+}
 
 var EVENTS = [
-  "changke_huodongym", 
-  "changke_lingqu", 
-  "changke_zhucetc", 
-  "changke_yanzhengma", 
-  "changke_lijilingqu", 
-  "changke_chenggong", 
-  "changke_chakanxiangqing",
-  "changke_xiangqingym",
-  "changke_lijishiyong"
+  "VASbaoxiang_yemian" + environment, 
+  "VASbaoxiang_lijikaixiang" + environment, 
+  "VASbaoxiang_tc1" + environment, 
+  "VASbaoxiang_xiazai"
 ];
+
 
 
 module.exports = new trackEvent(EVENTS, type);

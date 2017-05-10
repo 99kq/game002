@@ -28,6 +28,7 @@ class Home extends Component {
 
   componentDidMount() {
     // 获取活动信息
+    tongji.track(1);
     this.requestEventStatus();
     // 开启倒计时
     this.timer = setInterval(function () {
@@ -62,11 +63,16 @@ class Home extends Component {
   // 弹出领取成功浮层
   popSusses = (info) =>{
     let that = this;
-    tongji.track(6);
+    tongji.track(3);
     app.closeModal();
     let popupHTML = '<div class="popup nb-modle popup-success">' +
+                      '<div class="qy-status">' +
+                        '<div class="qy-number"><span class="amt">'+info.interestsAmt+'</span>元</div>' +
+                        '<div class="qy-type">抵用券</div>' +
+                        '<div class="qy-text"><span class="name">'+info.interestsName+'</span>元</div>' +
+                      '</div>' +
                       '<div class="content-block">' +
-                          '<a href="#" class="button button-big active btn-success">查看详情</a>' +
+                          '<a href="#" class="button button-big active btn-success">下载快钱钱包App有更多机会</a>' +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +
@@ -76,7 +82,7 @@ class Home extends Component {
     app.popup(popupHTML);
     // 绑定弹出注册层事件
     $$('.popup-success').on('opened', function () {
-      tongji.track(7);
+      // tongji.track(7);
       $$(document).on('click', '.btn-success', function() {
           
           app.closeModal();
@@ -86,7 +92,7 @@ class Home extends Component {
   // 弹出领取 没有中奖
   popNotSusses = (info) =>{
     let that = this;
-    tongji.track(6);
+    // tongji.track(6);
     app.closeModal();
     let popupHTML = '<div class="popup nb-modle popup-notsuccess">' +
                       '<div class="content-block">' +
@@ -99,7 +105,53 @@ class Home extends Component {
     app.popup(popupHTML);
     // 绑定弹出注册层事件
     $$('.popup-notsuccess').on('opened', function () {
-      tongji.track(7);
+      // tongji.track(7);
+      $$(document).on('click', '.btn-notsuccess', function() {
+          
+          app.closeModal();
+      });
+    });
+  }
+  // 弹出 倒计时
+  popCountdownTime = (info) =>{
+    let that = this;
+    // tongji.track(6);
+    app.closeModal();
+    let popupHTML = '<div class="popup nb-modle popup-countdown">' +
+                      '<div class="content-block">' +
+                          '<a href="#" class="button button-big active btn-success">还有多少时间</a>' +
+                      '</div>' +
+                      '<div class="index-popup-btn">' +
+                          '<a href="#" class="close-popup index-popup-close">X</a>' +
+                      '</div>'
+                  '</div>';
+    app.popup(popupHTML);
+    // 绑定弹出注册层事件
+    $$('.popup-notsuccess').on('opened', function () {
+      // tongji.track(7);
+      $$(document).on('click', '.btn-notsuccess', function() {
+          
+          app.closeModal();
+      });
+    });
+  }
+  // 弹出 活动没开始
+  popCountdownTime = (info) =>{
+    let that = this;
+    // tongji.track(6);
+    app.closeModal();
+    let popupHTML = '<div class="popup nb-modle popup-notStart">' +
+                      '<div class="content-block">' +
+                          '<a href="#" class="button button-big active btn-success">还有多少时间</a>' +
+                      '</div>' +
+                      '<div class="index-popup-btn">' +
+                          '<a href="#" class="close-popup index-popup-close">X</a>' +
+                      '</div>'
+                  '</div>';
+    app.popup(popupHTML);
+    // 绑定弹出注册层事件
+    $$('.popup-notStart').on('opened', function () {
+      // tongji.track(7);
       $$(document).on('click', '.btn-notsuccess', function() {
           
           app.closeModal();
@@ -167,6 +219,7 @@ class Home extends Component {
   }
   //打开盒子
   handleOpenBox = () => {
+    tongji.track(2);
     let that = this;
     console.log('handleOpenBox',this.state,that);
     
@@ -180,7 +233,7 @@ class Home extends Component {
       // console.log('logined');
       if( boxNmuber > 0){
         //有可开箱子
-        if(this.state.countdown>0){
+        if(that.state.countdown>0){
           //倒计时未结束
           let sec_num = parseInt(this.state.countdown, 10)
           let hours   = Math.floor(sec_num / 3600)
@@ -211,7 +264,11 @@ class Home extends Component {
     console.log('handleRule');
     // app.alert('规则');
     //test
-    that.popSusses();
+    let info = {
+      interestsAmt:"888.88",
+      interestsName:"Beats Solo3蓝牙无线头戴式耳机"
+    }
+    that.popSusses(info);
     //test
     
   }
@@ -241,7 +298,11 @@ class Home extends Component {
     // 剩余时间倒计时
     function setLeftTime(seconds_in){
       if (isNaN(seconds_in)) {
-        return '00:00:00'
+        return (
+          <div className="left-text">
+                <span></span> 00<span>小时</span> 00<span>分</span> 00<span>秒</span>
+            </div>
+        )
       } else {
         let sec_num = parseInt(seconds_in, 10)
         let hours   = Math.floor(sec_num / 3600)
@@ -255,7 +316,7 @@ class Home extends Component {
         if (days < 1){ days = ""}
         return (
             <div className="left-text">
-                <span></span> {hours}<span>小时</span>{minutes}<span>分</span> {seconds}<span>秒</span>
+                <span></span> {hours}<span>小时</span> {minutes}<span>分</span> {seconds}<span>秒</span>
             </div>
         )
       }
