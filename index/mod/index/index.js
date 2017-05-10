@@ -3,7 +3,7 @@ import service from '../common/service'
 import tongji from '../common/tongji'
 import util from '../common/util'
 import H5login from '../common/H5login'
-import {Motion, spring} from 'react-motion';
+// import {Motion, spring} from 'react-motion';
 
 
 // 设定箱子晃动动画弹性
@@ -156,6 +156,12 @@ class Home extends Component {
     console.log('handleRockBox');
     this.setState({'roke': !this.state.roke});
   }
+  // 规则
+  handleRule = () => {
+    console.log('handleRule');
+    app.alert('规则');
+    
+  }
   render() {
     let boxClaseName = 'chest';
     let btnClaseName = 'btn';
@@ -165,6 +171,19 @@ class Home extends Component {
     }else{
        boxClaseName = 'chest';
        btnClaseName = 'btn'
+    }
+    // 按钮晃动
+    function btnShake(){
+      if(this.state.roke){
+        return(
+          <a href="#" className={btnClaseName + " shake-slow shake-constant shake-constant--hover"} onClick={this.handleOpenBox.bind()}></a>
+        )
+      }else{
+        return(
+          <a href="#" className={btnClaseName} onClick={this.handleOpenBox.bind()}></a>
+        )
+      }
+      
     }
     // 剩余时间倒计时
     function setLeftTime(seconds_in){
@@ -239,16 +258,11 @@ class Home extends Component {
         <div className="chestbox">
           <div className={boxClaseName} onClick={this.handleRockBox.bind()} />
         </div>
-        <div className="rule" onClick={this.handleOpenBox.bind()}>活动细则</div>
+        <div className="rule">
+          <a href="#" className="btn-rule" onClick={this.handleRule.bind()}>活动细则</a>
+        </div>
         <div className="btnbox">
-          <Motion style={{scale: spring(this.state.roke ? 1.1 : 1, springSetting1)}}>
-            {({scale}) =>
-              <a href="#" className={btnClaseName} style={{
-                WebkitTransform: ` scale(${scale})`,
-                transform: `scale(${scale})`
-              }} onClick={this.handleOpenBox.bind()}></a>
-            }
-          </Motion>
+          {btnShake.bind(this)()}
         </div>
         <div className="number">今天您还有 {this.state.todayAll} 次开箱机会</div>
         {footer.bind(this)()}

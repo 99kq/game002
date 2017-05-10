@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/jian263994241/default#readme",
   "dependencies": {
+    "csshake": "^1.5.1",
     "lodash.range": "^3.2.0",
     "react-motion": "^0.5.0"
   }
