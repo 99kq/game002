@@ -17,8 +17,8 @@ class Home extends Component {
       openStatus: false, //当前箱子开启状态:false为还能开，true为箱子已打开
       roke: false, //晃动箱子的开关
       activityInfoId:'4', //活动id
-      countdown:5,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
-      status:"99",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
+      countdown:225,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
+      status:"03",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:0, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
       timeInterval:10, // 抽取宝箱的间隔时间
@@ -29,7 +29,7 @@ class Home extends Component {
   componentDidMount() {
     // 获取活动信息
     tongji.track(1);
-    this.requestEventStatus();
+    // this.requestEventStatus();
     // 开启倒计时
     this.timer = setInterval(function () {
         let countdown = this.state.countdown;
@@ -117,13 +117,26 @@ class Home extends Component {
     });
   }
   // 弹出 倒计时
-  popCountdownTime = (info) =>{
+  popCountdownTime = () =>{
     let that = this;
     // tongji.track(6);
     app.closeModal();
+    let seconds_in = that.state.countdown;
+    let sec_num = parseInt(seconds_in, 10)
+        let hours   = Math.floor(sec_num / 3600)
+        let displayHours = Math.floor(sec_num / 3600)%24
+        let days    = Math.floor(hours / 24)
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
+        let seconds = sec_num - (hours * 3600) - (minutes * 60)
+        if (hours   < 10) {hours   = "0" + hours}
+        if (minutes < 10) {minutes = "0" + minutes}
+        if (seconds < 10) {seconds = "0" + seconds}
+        if (days < 1){ days = ""}
+
+    let time = minutes + "<span>分</span>" +seconds + "<span>秒</span>";
     let popupHTML = '<div class="popup nb-modle popup-countdown">' +
                       '<div class="content-block">' +
-                          '<a href="#" class="button button-big active btn-success">还有多少时间</a>' +
+                         time +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +
@@ -139,12 +152,12 @@ class Home extends Component {
       });
     });
   }
-  // 弹出 活动没开始
-  popCountdownTime = (info) =>{
+  // 弹出 明天再来
+  popTomorrow = (info) =>{
     let that = this;
     // tongji.track(6);
     app.closeModal();
-    let popupHTML = '<div class="popup nb-modle popup-notStart">' +
+    let popupHTML = '<div class="popup nb-modle popup-tomorrow">' +
                       '<div class="content-block">' +
                           '<a href="#" class="button button-big active btn-success">还有多少时间</a>' +
                       '</div>' +
@@ -268,11 +281,12 @@ class Home extends Component {
     console.log('handleRule');
     // app.alert('规则');
     //test
-    let info = {
-      interestsAmt:"888.88",
-      interestsName:"Beats Solo3蓝牙无线头戴式耳机"
-    }
-    that.popSusses(info);
+    // let info = {
+    //   interestsAmt:"888.88",
+    //   interestsName:"Beats Solo3蓝牙无线头戴式耳机"
+    // }
+    // that.popSusses(info);
+    that.popCountdownTime();
     //test
     
   }
