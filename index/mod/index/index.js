@@ -12,11 +12,11 @@ class Home extends Component {
       openStatus: false, //当前箱子开启状态:false为还能开，true为箱子已打开
       roke: false, //晃动箱子的开关
       activityInfoId:'4', //活动id
-      countdown:225,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
+      countdown:600,  //活动剩余时间或冷却时间	number	秒为单位，倒计时
       status:"03",  //00 为开始，01当日已开完， 02有冷却中宝箱， 03有可开启宝箱，99活动已结束, 98为未开始
       todayAll:0, //今天可开数	number	今天进行了一次抽奖，就会-1，这次活动第一次查询返回的是3
       todayOpened:0,   //今天已开数	number	进行了一次抽奖就会+1
-      timeInterval:10, // 抽取宝箱的间隔时间
+      timeInterval:600, // 抽取宝箱的间隔时间
       leftTime:60
     };
   }
@@ -252,12 +252,25 @@ class Home extends Component {
     console.log('handleOpenBox',this.state,that);
     
     let boxNmuber = this.state.todayAll;
-    if(that.state.status ==='98' || that.state.status ==='99'){
-      app.alert(this.state.statusText);
-      return false;
-    }
+
+    // test
+    // if(that.state.status ==='98' || that.state.status ==='99'){
+    //   app.alert(this.state.statusText);
+    //   return false;
+    // }
+    // test
+
+
     // 用户登录判断
-    H5login(function() {
+    if(!sessionStorage.loginToken){
+      let location = window.location.href;
+      H5login(function() {
+        window.open(location); 
+      }); //login
+    }
+
+
+    
       // console.log('logined');
       if( boxNmuber > 0){
         //有可开箱子
@@ -273,7 +286,7 @@ class Home extends Component {
         that.popTomorrow();
         // app.alert("已开达到今天上限，明天再来！！"); 
       }
-    }); //login
+    
   }
   // 晃动动画
   handleRockBox = () => {
