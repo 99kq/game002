@@ -1,5 +1,4 @@
 
-
 var trackEvent = function(events, type) {
   this._events = events;
   this.type = type;
@@ -15,11 +14,15 @@ trackEvent.prototype.track = function(key) {
 
 var type = 'VASbaoxiang';
 var environment = "";
-
 if (window.KQB.Env.KQ){
   environment = "_neibu";
 }else{
   environment = "_waibu";
+}
+var query = $$.parseUrlQuery(location.search);
+console.log($$.parseUrlQuery(location.search),query);
+if(query.datasrc){
+  environment += "_" + query.datasrc;
 }
 
 var EVENTS = [
@@ -28,6 +31,7 @@ var EVENTS = [
   "VASbaoxiang_tc1" + environment, 
   "VASbaoxiang_xiazai"
 ];
+
 
 
 
