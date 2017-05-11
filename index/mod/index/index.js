@@ -29,7 +29,7 @@ class Home extends Component {
   componentDidMount() {
     // 获取活动信息
     tongji.track(1);
-    // this.requestEventStatus();
+    this.requestEventStatus();
     // 开启倒计时
     this.timer = setInterval(function () {
         let countdown = this.state.countdown;
@@ -98,9 +98,13 @@ class Home extends Component {
     let that = this;
     // tongji.track(6);
     app.closeModal();
+    let noKQB = '<a href="#" class="button button-big active btn-notsuccess">下载快钱钱包App有更多机会</a>';
+    if(window.KQB.Env.KQ){
+      noKQB = '<a href="#" class="button button-big active btn-notsuccess">我知道了</a>';
+    }
     let popupHTML = '<div class="popup nb-modle popup-notsuccess">' +
                       '<div class="content-block">' +
-                          '<a href="#" class="button button-big active btn-success">查看详情</a>' +
+                         noKQB +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +
@@ -111,7 +115,6 @@ class Home extends Component {
     $$('.popup-notsuccess').on('opened', function () {
       // tongji.track(7);
       $$(document).on('click', '.btn-notsuccess', function() {
-          
           app.closeModal();
       });
     });
@@ -123,9 +126,14 @@ class Home extends Component {
     app.closeModal();
     // let time = minutes + "<span>分</span>" +seconds + "<span>秒</span>";
     let time = util.formatTime(that.state.countdown,":","2-4","小时-分-秒");
+    let noKQB = '<a href="#" class="button button-big active btn-success">下载快钱钱包App有更多机会</a>';
+    if(window.KQB.Env.KQ){
+      noKQB = '';
+    }
     let popupHTML = '<div class="popup nb-modle popup-countdown">' +
                       '<div class="content-block">' +
                          time +
+                         noKQB +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +
@@ -155,9 +163,13 @@ class Home extends Component {
     let that = this;
     // tongji.track(6);
     app.closeModal();
+    let noKQB = '<a href="#" class="button button-big active btn-success">下载快钱钱包App有更多机会</a>';
+    if(window.KQB.Env.KQ){
+      noKQB = '<a href="#" class="button button-big active btn-tomorrow">我知道了</a>';
+    }
     let popupHTML = '<div class="popup nb-modle popup-tomorrow">' +
                       '<div class="content-block">' +
-                          '<a href="#" class="button button-big active btn-success">还有多少时间</a>' +
+                          noKQB +
                       '</div>' +
                       '<div class="index-popup-btn">' +
                           '<a href="#" class="close-popup index-popup-close">X</a>' +
@@ -165,10 +177,9 @@ class Home extends Component {
                   '</div>';
     app.popup(popupHTML);
     // 绑定弹出注册层事件
-    $$('.popup-notStart').on('opened', function () {
+    $$('.popup-tomorrow').on('opened', function () {
       // tongji.track(7);
-      $$(document).on('click', '.btn-notsuccess', function() {
-          
+      $$(document).on('click', '.btn-tomorrow', function() {
           app.closeModal();
       });
     });
@@ -229,6 +240,11 @@ class Home extends Component {
       success: function(rewardRes) {
         //
         console.log('rewardRequest',rewardRes);
+        if(rewardRes.rewardStatus==="0" && rewardRes.responseCode==="00"){
+          that.popSusses(rewardRes);
+        }else{
+          that.popNotSusses(rewardRes);
+        }
       }
     });
   }
@@ -250,13 +266,15 @@ class Home extends Component {
         //有可开箱子
         if(that.state.countdown>0){
           //倒计时未结束
-          let sec_num = parseInt(this.state.countdown, 10)
-          let hours   = Math.floor(sec_num / 3600)
-          let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
-          let seconds = sec_num - (hours * 3600) - (minutes * 60)
-          if (minutes < 10) {minutes = "0" + minutes}
-          if (seconds < 10) {seconds = "0" + seconds}
-          app.alert("需要等"+ minutes +"分"+seconds+"秒后开启！！"); 
+          // let sec_num = parseInt(this.state.countdown, 10)
+          // let hours   = Math.floor(sec_num / 3600)
+          // let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
+          // let seconds = sec_num - (hours * 3600) - (minutes * 60)
+          // if (minutes < 10) {minutes = "0" + minutes}
+          // if (seconds < 10) {seconds = "0" + seconds}
+          // app.alert("需要等"+ minutes +"分"+seconds+"秒后开启！！"); 
+          // // 
+          that.popCountdownTime();
           return false;
         }else{
           // console.log(that,that.requestEventReward);
@@ -264,7 +282,8 @@ class Home extends Component {
         }
       }else{
         // 无可开箱子
-        app.alert("已开达到今天上限，明天再来！！"); 
+        that.popTomorrow();
+        // app.alert("已开达到今天上限，明天再来！！"); 
       }
     }); //login
   }
@@ -277,6 +296,7 @@ class Home extends Component {
   handleRule = () => {
     let that = this;
     console.log('handleRule');
+
     // app.alert('规则');
     //test
     // let info = {
@@ -284,10 +304,28 @@ class Home extends Component {
     //   interestsName:"Beats Solo3蓝牙无线头戴式耳机"
     // }
     // that.popSusses(info);
-    that.popCountdownTime();
+    // that.popCountdownTime();
+    // that.popTomorrow();
+    // that.popNotSusses();
     //test
     
   }
+  handleShowRule =() =>{
+        var showLayer = $$('#hide_layer, .hide_overlayer');
+        
+        showLayer.show();
+        // console.log(this.state);
+        setTimeout(function () {
+                showLayer.addClass('active');
+            }, 100);
+    }
+
+    handleHideRule =() =>{
+        var showLayer = $$('#hide_layer, .hide_overlayer');
+
+        showLayer.hide();
+        showLayer.removeClass('active');
+    }
   render() {
     let boxClaseName = 'chest';
     let btnClaseName = 'btn';
@@ -388,11 +426,40 @@ class Home extends Component {
           <div className={boxClaseName} onClick={this.handleRockBox.bind()} />
         </div>
         <div className="rule">
-          <a href="#" className="btn-rule" onClick={this.handleRule.bind()}>活动细则</a>
+          <a href="#" className="btn-rule" onClick={this.handleShowRule.bind()}>活动细则</a>
         </div>
         {btnBox.bind(this)()}
         <div className="number">今天您还有 {this.state.todayAll} 次开箱机会</div>
         {footer.bind(this)()}
+        <div className="layer-box row " id="hide_layer" >
+            <div className="content-block">
+                <p className="agreement-title">活动规则：</p>
+                <p>1、 活动说明</p>
+                <p>a）活动时间：</p>
+                <p>b）参与对象：快钱钱包App实名用户及未购买过快钱理财产品新用户；</p>
+                <p>c）参与方式：快钱钱包App实名用户发送拼团邀请链接至好友，受邀好友打开邀请链接并点击参团，登录或完成注册，即成功绑定拼团邀请关系；</p>
+                <p>d）活动期间每位用户的快钱钱包账户、手机号码、移动设备号和银行卡卡号作为用户身份的实名认证要素，以上任一要素相同，均视为同一位用户。</p>
+                <p>e）活动过程中如发现用户存在不当行为，快钱有权取消该用户所有活动相关奖励；</p>
+                <p>f）快钱有权在中国法律法规允许的范围内修改本活动条款及细则，并于快钱钱包App或其他相关渠道公告后生效，敬请留意。</p>
+
+                <p>2、拼团说明</p>
+                <p>a）已购买过快钱理财产品的用户仅能作为团长开团，未购买过快钱理财产品的用户可开团或参团，但每位用户仅限参加一次拼团（不区分开团或参团）；</p>
+                <p>b）3人（含）以上即成团，成员至少需要包含两名未购买理财的新用户；</p>
+                <p>c）活动期内成团，每位团员成功购买快钱理财固定期限 “快定盈”系列理财产品满3000元（含）以上， 团长及团员均可获得100元活动奖励：包含30元现金奖励和70元理财抵用券（20元+50元各一张），即拼团成功；</p>
+                <p>d）快钱理财“快定盈”系列包括快定盈新手专享14天、快定盈30天-365天理财产品以及快定盈结构化产品；</p>
+                <p>e）若参团购买的产品不成立，快钱理财只须返还投资者实际投入的本金。若拼团不成功，已购买的理财产品仍然成立。</p>
+
+                <p>3、奖励细则</p>
+                <p>a）30元现金奖励将于活动结束后5个工作日内发放至活期理财快利来账户并短信通知，支持随时提现，如参与拼团用户尚未开通快利来账户，参与该活动即代表授权快钱为其自动开通快利来账户。</p>
+                <p>b）70元理财抵用券（20元+50元各一张）将于活动结束后5个工作日内发放并短信通知，快钱钱包用户至快钱钱包App首页【卡券包】内查看，券有效期为自发放之日起14天内有效，过期作废。</p>
+                <p>c）20元理财抵用券仅限购买快钱理财90天（不含）以上“可用券”产品满5000元（含）以上使用，50元理财抵用券仅限购买快钱理财90天（不含）以上“可用券”产品满20000元（含）以上使用。（新手专享产品不可用券）；</p>
+                <p>d）每张理财抵用券每个用户ID仅限使用一次，每笔交易仅可抵用一张。</p>
+                <p>e）理财抵用券使用流程：◆快钱钱包用户：点击“理财”-->选择“固定期限”-->选择带“可用券”标记的快定盈理财产品，点击立即购买-->填写购买金额，选择抵用券，支付并完成购买。</p>
+            
+            </div>
+        </div>
+        <div className="icon-cross-wrapper"><i className="icon-cross hide_layer_btn" onClick={this.handleHideRule} ></i></div>
+        <div className="overlayer hide_overlayer"></div>
       </div>
     );
   }
