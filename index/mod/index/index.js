@@ -3,11 +3,6 @@ import service from '../common/service'
 import tongji from '../common/tongji'
 import util from '../common/util'
 import H5login from '../common/H5login'
-// import {Motion, spring} from 'react-motion';
-
-
-// 设定箱子晃动动画弹性
-const springSetting1 = {stiffness: 600, damping: 1, precision:0.01};
 
 class Home extends Component {
 
@@ -25,7 +20,6 @@ class Home extends Component {
       leftTime:60
     };
   }
-
   componentDidMount() {
     // 获取活动信息
     tongji.track(1);
@@ -192,6 +186,19 @@ class Home extends Component {
       data: infoData,
       success: function(infoRes) {
         if(infoRes.responseCode === '00'){
+          let statusText = '';
+          //活动状态
+          switch (infoRes.status){
+            case "99":
+              statusText = "活动还没开始，明天来看看";
+              break;
+            case "98":
+              statusText = "活动已结束，请下次再来";
+              break;
+            default:
+              statusText = "活动已结束，请下次再来";
+              break;
+          }
           // 保存活动信息
           that.setState({
             'activityInfoId':infoRes.activityInfoId,
@@ -199,24 +206,14 @@ class Home extends Component {
             'status':infoRes.status,
             'todayAll':infoRes.todayAll,
             'todayOpened':infoRes.todayOpened,
+            'statusText': statusText
           })
         }else{
           app.alert('获取活动信息:'+infoRes.responseMessagev);
         }
       }
     });
-    //活动状态
-    let status = this.state.status;
-    switch (status){
-      case "99":
-        this.setState({
-          statusText : "活动还没开始，明天来看看"
-        });
-      case "98":
-        this.setState({
-          statusText : "活动已结束，请下次再来"
-        });
-    }
+    
   }
   // 获取箱子权益
   requestEventReward = () => {
@@ -265,15 +262,6 @@ class Home extends Component {
       if( boxNmuber > 0){
         //有可开箱子
         if(that.state.countdown>0){
-          //倒计时未结束
-          // let sec_num = parseInt(this.state.countdown, 10)
-          // let hours   = Math.floor(sec_num / 3600)
-          // let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
-          // let seconds = sec_num - (hours * 3600) - (minutes * 60)
-          // if (minutes < 10) {minutes = "0" + minutes}
-          // if (seconds < 10) {seconds = "0" + seconds}
-          // app.alert("需要等"+ minutes +"分"+seconds+"秒后开启！！"); 
-          // // 
           that.popCountdownTime();
           return false;
         }else{
@@ -289,43 +277,24 @@ class Home extends Component {
   }
   // 晃动动画
   handleRockBox = () => {
-    console.log('handleRockBox');
+    // console.log('handleRockBox');
     this.setState({'roke': !this.state.roke});
   }
-  // 规则
-  handleRule = () => {
-    let that = this;
-    console.log('handleRule');
-
-    // app.alert('规则');
-    //test
-    // let info = {
-    //   interestsAmt:"888.88",
-    //   interestsName:"Beats Solo3蓝牙无线头戴式耳机"
-    // }
-    // that.popSusses(info);
-    // that.popCountdownTime();
-    // that.popTomorrow();
-    // that.popNotSusses();
-    //test
-    
-  }
+  // 规则展示
   handleShowRule =() =>{
-        var showLayer = $$('#hide_layer, .hide_overlayer');
-        
-        showLayer.show();
-        // console.log(this.state);
-        setTimeout(function () {
-                showLayer.addClass('active');
-            }, 100);
-    }
-
-    handleHideRule =() =>{
-        var showLayer = $$('#hide_layer, .hide_overlayer');
-
-        showLayer.hide();
-        showLayer.removeClass('active');
-    }
+    var showLayer = $$('#hide_layer, .hide_overlayer');
+    showLayer.show();
+    // console.log(this.state);
+    setTimeout(function () {
+      showLayer.addClass('active');
+    }, 100);
+  }
+  // 规则隐藏
+  handleHideRule =() =>{
+    var showLayer = $$('#hide_layer, .hide_overlayer');
+    showLayer.hide();
+    showLayer.removeClass('active');
+  }
   render() {
     let boxClaseName = 'chest';
     let btnClaseName = 'btn';
@@ -381,7 +350,6 @@ class Home extends Component {
         )
       }
     }
-
     // 开箱按钮
     function btnBox(){
       let that = this;
@@ -411,7 +379,6 @@ class Home extends Component {
         return false;
       }
     }
-
     return (
       <div className="lottery">
         <div className="ad"></div>
@@ -463,8 +430,5 @@ class Home extends Component {
       </div>
     );
   }
-  
 }
-
-
 export default Home;
