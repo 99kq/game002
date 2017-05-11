@@ -121,19 +121,8 @@ class Home extends Component {
     let that = this;
     // tongji.track(6);
     app.closeModal();
-    let seconds_in = that.state.countdown;
-    let sec_num = parseInt(seconds_in, 10)
-        let hours   = Math.floor(sec_num / 3600)
-        let displayHours = Math.floor(sec_num / 3600)%24
-        let days    = Math.floor(hours / 24)
-        let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
-        let seconds = sec_num - (hours * 3600) - (minutes * 60)
-        if (hours   < 10) {hours   = "0" + hours}
-        if (minutes < 10) {minutes = "0" + minutes}
-        if (seconds < 10) {seconds = "0" + seconds}
-        if (days < 1){ days = ""}
-
-    let time = minutes + "<span>分</span>" +seconds + "<span>秒</span>";
+    // let time = minutes + "<span>分</span>" +seconds + "<span>秒</span>";
+    let time = util.formatTime(that.state.countdown,":","2-4","小时-分-秒");
     let popupHTML = '<div class="popup nb-modle popup-countdown">' +
                       '<div class="content-block">' +
                          time +
@@ -144,10 +133,19 @@ class Home extends Component {
                   '</div>';
     app.popup(popupHTML);
     // 绑定弹出注册层事件
-    $$('.popup-notsuccess').on('opened', function () {
+    $$('.popup-countdown').on('opened', function () {
       // tongji.track(7);
+      // var countdownNum = that.state.countdown;
+      // var countdownTimer = setInterval(function() {
+      //   countdownNum -= 1;
+      //   if (countdownNum === 0) {
+      //     clearInterval(countdownTimer);
+      //     return;
+      //   }
+      //   console.log('time:',countdownNum);
+      //   $$('.popup-countdown .content-block').html(util.formatTime(countdownNum,":","2-4","小时-分-秒"));
+      // }, 1000);
       $$(document).on('click', '.btn-notsuccess', function() {
-          
           app.closeModal();
       });
     });
@@ -322,19 +320,9 @@ class Home extends Component {
             </div>
         )
       } else {
-        let sec_num = parseInt(seconds_in, 10)
-        let hours   = Math.floor(sec_num / 3600)
-        let displayHours = Math.floor(sec_num / 3600)%24
-        let days    = Math.floor(hours / 24)
-        let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
-        let seconds = sec_num - (hours * 3600) - (minutes * 60)
-        if (hours   < 10) {hours   = "0" + hours}
-        if (minutes < 10) {minutes = "0" + minutes}
-        if (seconds < 10) {seconds = "0" + seconds}
-        if (days < 1){ days = ""}
         return (
             <div className="left-text">
-                <span></span> {hours}<span>小时</span> {minutes}<span>分</span> {seconds}<span>秒</span>
+                <span>{util.formatTime(seconds_in,":","2-4","小时-分-秒")}</span>
             </div>
         )
       }
