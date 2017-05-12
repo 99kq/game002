@@ -26,19 +26,11 @@ render((
     root:'.framework7-root'
   });
 
-  var query = $.parseUrlQuery(location.search);
-  if (query.idCardRecord) {
-    app.session.set('idCardRecord',query.idCardRecord);
-  }
-  console.log(sessionStorage.verifyCode,query.verifyCode);
-  if (query.verifyCode) {
-    if(sessionStorage.verifyCode != query.verifyCode){
-      sessionStorage.setItem('verifyCode',query.verifyCode);
-    }
-  }
-  // 测试
-  // app.alert('idCardRecord:'+query.idCardRecord+ ',verifyCode:'+query.verifyCode);
-  // 测试
+  app.shareInfo = {
+    title: '每天分瓜100万 人人有奖',
+    desc: '快钱钱包商城频道分瓜了！ 每天分瓜100万，还有更多3C爆款免息购，快来抢瓜~~',
+    imgUrl: 'https://img.99bill.com/res/i/share-chest_9725484d9cbd.jpg'
+  };
   
   app.mainView = app.addView('.view-main');
 

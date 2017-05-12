@@ -20,7 +20,7 @@ if (window.KQB.Env.KQ){
   environment = "_waibu";
 }
 var query = $$.parseUrlQuery(location.search);
-console.log($$.parseUrlQuery(location.search),query);
+// console.log($$.parseUrlQuery(location.search),query);
 if(query.datasrc){
   environment += "_" + query.datasrc;
 }

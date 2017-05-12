@@ -2,6 +2,8 @@ import {Component} from 'react'
 import service from '../common/service'
 import tongji from '../common/tongji'
 import util from '../common/util'
+import native from '../common/native';
+import wechatShare from '../common/wechat-share';
 import H5login from '../common/H5login'
 
 class Home extends Component {
@@ -21,8 +23,27 @@ class Home extends Component {
     };
   }
   componentDidMount() {
-    // 获取活动信息
+    //统计
     tongji.track(1);
+    // 微信分享
+    wechatShare();
+
+    app.share = function() {
+      native.share(app.shareInfo);
+    };
+    // app 活动分享
+    native.navigationBarMenu(
+      [
+        {
+          iconUrl: 'https://img.99bill.com/res/i/menuicon_share-b201612271308@2x.png',
+          name: '分享',
+          functionName: 'app.share',
+          jumpModel: '1'
+        }
+      ]
+    );
+
+    // 获取活动信息
     this.requestEventStatus();
     // 开启倒计时
     this.timer = setInterval(function () {
@@ -220,7 +241,7 @@ class Home extends Component {
     let boxNmuber = this.state.todayAll;
     let that = this;
     // test
-    app.alert("您已获得test资格！");
+    // app.alert("您已获得test资格！");
     
     that.setState({
       'openStatus': true,
@@ -247,19 +268,18 @@ class Home extends Component {
   }
   //打开盒子
   handleOpenBox = () => {
+    //统计
     tongji.track(2);
     let that = this;
     console.log('handleOpenBox',this.state,that);
     
     let boxNmuber = this.state.todayAll;
-
     // test
     // if(that.state.status ==='98' || that.state.status ==='99'){
     //   app.alert(this.state.statusText);
     //   return false;
     // }
     // test
-
 
     // 用户登录判断
     if(!sessionStorage.loginToken){
@@ -268,24 +288,21 @@ class Home extends Component {
         window.open(location); 
       }); //login
     }
-
-
-    
-      // console.log('logined');
-      if( boxNmuber > 0){
-        //有可开箱子
-        if(that.state.countdown>0){
-          that.popCountdownTime();
-          return false;
-        }else{
-          // console.log(that,that.requestEventReward);
-          that.requestEventReward();
-        }
+    // console.log('logined');
+    if( boxNmuber > 0){
+      //有可开箱子
+      if(that.state.countdown>0){
+        that.popCountdownTime();
+        return false;
       }else{
-        // 无可开箱子
-        that.popTomorrow();
-        // app.alert("已开达到今天上限，明天再来！！"); 
+        // console.log(that,that.requestEventReward);
+        that.requestEventReward();
       }
+    }else{
+      // 无可开箱子
+      that.popTomorrow();
+      // app.alert("已开达到今天上限，明天再来！！"); 
+    }
     
   }
   // 晃动动画
